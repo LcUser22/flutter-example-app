@@ -1,11 +1,12 @@
 // ignore_for_file: unused_local_variable
 
-import 'dart:convert';
-import 'dart:io';
-
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:livecoding/task2/todo_model.dart';
 
 class TodoRepo {
+  final Dio _dio = Dio();
+
   /*
     Данные, которые приходят с API:
     [
@@ -25,11 +26,19 @@ class TodoRepo {
     ]
   */
   Future<List<TodoModel>> getTodos() async {
-    var url = Uri.parse('https://jsonplaceholder.typicode.com/todos');
-    var response = await HttpClient().getUrl(url);
-    var responseBody = await response.close();
-    var data = await responseBody.transform(utf8.decoder).join();
+    try {
+      final response = await _dio.get('https://jsonplaceholder.typicode.com/todos');
 
-    return [];
+      if (response.statusCode == 200) {
+        List<dynamic> jsonList = response.data;
+
+        return [];
+      } else {
+        throw Exception('Ошибка загрузки данных: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('Ошибка при запросе: $e');
+      return [];
+    }
   }
 }

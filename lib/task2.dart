@@ -31,7 +31,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   // ignore: unused_field
-  List<TodoModel> _todos = [];
+  Future<List<TodoModel>>? _todos;
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +50,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () async {
-                  _todos = await TodoRepo().getTodos();
-                  setState(() {});
+                  setState(() {
+                    _todos = TodoRepo().getTodos();
+                  });
                 },
                 child: const Text('Получить данные'),
               ),
